@@ -2,12 +2,20 @@
 const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 userRoute = require("./routes/user");
 
 const app = express();
 
 // app.use(cors())
+//middleware
+app.use(morgan('dev'));
+app.use(bodyParser.json())
+app.use(cookieParser());
 
+//routes middleware
 app.use("/user", userRoute);
 
 port = process.env.PORT || 5000;
