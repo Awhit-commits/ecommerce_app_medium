@@ -6,7 +6,8 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const expressValidator = require("express-validator");
-userRoute = require("./routes/user");
+apiRoute = require("./routes/auth");
+userRoute = require("./routes/user")
 
 const app = express();
 
@@ -18,7 +19,9 @@ app.use(cookieParser());
 app.use(expressValidator());
 
 //routes middleware
-app.use("/user", userRoute);
+app.use("/api", apiRoute);
+
+app.use("/user",userRoute)
 
 port = process.env.PORT || 5000;
 //database connection
