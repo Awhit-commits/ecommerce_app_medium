@@ -2,9 +2,8 @@ const mongoose = require("mongoose");
 const crypto = require("crypto");
 const uuidv1 = require("uuidv1");
 
-
 const Schema = mongoose.Schema;
-//User model for database 
+//User model for database
 //Name, email, password, about, role, history
 const userSchema = new Schema(
   {
@@ -40,10 +39,9 @@ userSchema
   });
 
 userSchema.methods = {
-authenticate: function(plainText) {
-  return this.encryptPassword(plainText) === this.hashed_password;
-
-},
+  authenticate: function (plainText) {
+    return this.encryptPassword(plainText) === this.hashed_password;
+  },
 
   encryptPassword: function (password) {
     if (!password) return "";
@@ -55,7 +53,7 @@ authenticate: function(plainText) {
     } catch (err) {
       return;
     }
-  }
+  },
 };
 
 module.exports = mongoose.model("user092020", userSchema);

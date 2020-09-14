@@ -7,7 +7,8 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const expressValidator = require("express-validator");
 apiRoute = require("./routes/auth");
-userRoute = require("./routes/user")
+userRoute = require("./routes/user");
+categoryRoute = require("./routes/category")
 
 const app = express();
 
@@ -21,7 +22,8 @@ app.use(expressValidator());
 //routes middleware
 app.use("/api", apiRoute);
 
-app.use("/user",userRoute)
+app.use("/user", userRoute);
+app.use ("/category",categoryRoute)
 
 port = process.env.PORT || 5000;
 //database connection
