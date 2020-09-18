@@ -9,6 +9,7 @@ const expressValidator = require("express-validator");
 authRoute = require("./routes/auth");
 userRoute = require("./routes/user");
 categoryRoute = require("./routes/category")
+productRoute = require("./routes/product")
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use("/api", authRoute);
 
 app.use("/api", userRoute);
 app.use ("/api",categoryRoute)
+app.use("/api",productRoute)
 
 port = process.env.PORT || 5000;
 //database connection
