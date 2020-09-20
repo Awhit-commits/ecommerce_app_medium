@@ -1,14 +1,76 @@
 const Category = require("../models/category")
-const { errorHandler } = require("../helpers/dbErrorHandler")
+const {
+    errorHandler
+} = require("../helpers/dbErrorHandler")
 
-exports.create = (req,res) =>{
-    const category = new Category(req.body)
-    category.save((err,data)=>{
+exports.categoryById = (req, res, next, id) => {
+    Category.findById(id).exec((err, category) => {
+        if (err) {
+            res.status(400).json({
+                error: "Category not found"
+            })
+        }
+        req.category = category
+        next()
+    })
+}
+
+exports.list = (req,res)=>{
+    Category.find((err,results)=>{
         if(err){
-            return res.status(400).json({error:errorHandler(err)})
+            res.status(400).json({error:errorHandler(err)})
+        }
+        res.json(results)
+    })
+}
+
+exports.read = (req,res)=>{
+   res.json(req.category)
+}
+
+exports.create = (req, res) => {
+    const category = new Category(req.body)
+    category.save((err, data) => {
+        if (err) {
+            return res.status(400).json({
+                error: errorHandler(err)
+            })
+        } else {
+            res.json({
+                data
+            })
+        }
+
+    })
+}
+
+exports.update = (req,res)=>{
+    const category = req.category
+    category.name  = req.body.name
+    category.save((err, data) => {
+        if (err) {
+            return res.status(400).json({
+                error: errorHandler(err)
+            })
+        } else {
+            res.json({
+                data
+            })
+        }
+
+    })
+}
+
+exports.remove = (req,res)=>{
+    let category = req.category
+    category.remove((err,deletedCategory)=>{
+        if(err){
+            res.status(400).json({
+                error:errorHandler(err)
+            })
         }
         else{
-            res.json({data})
+            res.json({deletedCategory,message:"Category deleted"})
         }
 
     })

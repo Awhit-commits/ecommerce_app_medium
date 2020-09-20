@@ -75,6 +75,58 @@ exports.create = (req, res) => {
     })
 
 }
+
+
+exports.update = (req, res) => {
+    let form = new formidable.IncomingForm()
+    form.keepExtensions = true
+    form.parse(req, (err, fields, files) => {
+        if (err) {
+            res.status(400).json({
+                error: "Image could not be uploaded"
+
+            })
+        } else {
+            let {
+                name,
+                price,
+                description,
+                category,
+                shipping,
+                quanity
+            } = fields
+            if (!name || !price || !description || !category || !shipping || !quanity) {
+                res.status(400).json({
+                    error: "All fields are required"
+                })
+            } else {
+                let product = req.product
+                product = _.extend(product, fields)
+
+
+                if (files.photo) {
+                    console.log('Photo Info', files.photo)
+                    if (files.photo.size > 5000000) {
+                        res.status(400).json({
+                            error: "Image must be 5mb or less"
+                        })
+                    }
+                    product.photo.data = fs.readFileSync(files.photo.path)
+                    product.photo.contentType = files.photo.type
+                }
+                product.save((err, results) => {
+                    if (err) {
+                        res.status(400).json({
+                            error: errorHandler(err)
+                        })
+                    }
+                    res.json(results);
+                })
+            }
+        }
+    })
+
+}
 exports.remove = (req, res) => {
     let product = req.product
     product.remove((err, deletedProduct) => {
@@ -88,4 +140,27 @@ exports.remove = (req, res) => {
             "message": "Product Deleted"
         })
     })
+}
+
+exports.list = (req, res) => {
+    let order = req.query.order ? req.query.order : 'asc'
+    let sortBy = req.query.sortBy ? req.query.sortBy : '_id'
+    let limit = req.query.limit ? parseInt(req.query.limit) : 6
+
+    Product.find()
+        .select("-photo")
+        .populate("category092020")
+        .sort([
+            [sortBy, order]
+        ])
+        .limit(limit)
+        .exec((err, product) => {
+            if (err) {
+                res.status(400).json({
+                    error: "Product not found"
+                })
+            }
+            res.send(product)
+        })
+
 }
