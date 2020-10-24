@@ -2,13 +2,19 @@ import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form"
+import { Link } from 'react-router-dom'
+
 function Login() {
   const [show, setShow] = useState(false);
-  const [email,setEmail] = useState ('');
-  const [password,setPassword] = useState('')
+  const [values, setValues] = useState({email:"",password:"",error:""})
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const {email,password,error} = values
+  
+  const handleChange = (name) => (event) => {
+    setValues({ ...values, error: false, [name]: event.target.value });
+  };
 
   const handleLogin = async (event)=>{
      let loginInfo = {
@@ -30,9 +36,9 @@ function Login() {
 
   return (
     <>
-      <Button variant="" onClick={handleShow}>
-        Login
-      </Button>
+       <span onClick={handleShow}>
+        Login</span>
+      
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -44,7 +50,7 @@ function Login() {
                     <Form.Label>
                         Email Address
                     </Form.Label>
-                    <Form.Control  onChange =  {e =>setEmail(e.target.value)} value = {email} type = "email" placeholder = "Enter email"/>
+                    <Form.Control  onChange =  {handleChange('email')} value = {email} type = "email" placeholder = "Enter email"/>
                    
 
                    
@@ -54,7 +60,13 @@ function Login() {
                     <Form.Label>
                         Password
                     </Form.Label>
-                    <Form.Control type = "password" placeholder = "Password" onChange = {e => setPassword(e.target.value)} value = {password}/>
+                    <Form.Control type = "password" placeholder = "Password" onChange = {handleChange('password')} value = {password}/>
+                    <Form.Text className="" style={{ textAlign: "center" }}>
+                Need to create an account?{" "}
+                <Link to="/signup" onClick={handleClose}>
+                  Click Here!
+                </Link>
+              </Form.Text>
                 </Form.Group>
             </Form>
         </Modal.Body>

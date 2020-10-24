@@ -11,7 +11,7 @@ const {
 const { userSignupValidator } = require("../validator/index");
 
 //Signup route
-router.post("/signup", userSignupValidator, signUp, requireSignin);
+router.post("/signup", userSignupValidator, signUp);
 
 //Login route
 router.post("/login", logIn);
