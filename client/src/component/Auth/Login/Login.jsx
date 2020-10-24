@@ -2,15 +2,17 @@ import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form"
-import { Link } from 'react-router-dom'
+import Alert from "react-bootstrap/Alert"
+import { Link,Redirect } from 'react-router-dom'
+import{authenicate} from '../index'
 
 function Login() {
   const [show, setShow] = useState(false);
-  const [values, setValues] = useState({email:"",password:"",error:""})
+  const [values, setValues] = useState({email:"",password:"",error:"",loading:false,redirectToReferrer:false})
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const {email,password,error} = values
+  const {email,password,error,loading,redirectToReferrer} = values
   
   const handleChange = (name) => (event) => {
     setValues({ ...values, error: false, [name]: event.target.value });
@@ -32,8 +34,33 @@ function Login() {
        })
       let json = await response.json();
       console.log(json);
+      setValues({...values,error:false,loading:true})
+      if(json.error){
+        setValues({...values,error:json.error,loading:false,redirectToReferrer:false})
+    }
+    else{
+      authenicate(json,()=>{
+        setValues ({...values,redirectToReferrer:true})
+      })
+   
+        handleClose()
+    }
   }
+  const showError = () => (
+    <Alert variant="danger" style={{ display: error ? "" : "none" }}>
+      <p>{error}</p>
+    </Alert>
+  );
+const showLoading  = ()=>(
+  loading && (<Alert variant ="info"><h2>Loading...</h2></Alert>)
+)
 
+const redirectUser = ()=>{
+  if(redirectToReferrer){
+    return ( <Redirect to ="/"/>)
+
+  }
+}
   return (
     <>
        <span onClick={handleShow}>
@@ -45,7 +72,11 @@ function Login() {
           <Modal.Title>Login</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          
             <Form>
+            {redirectUser()}
+          {showLoading()}
+              {showError()}
                 <Form.Group controlId = "formBasicEmail" >
                     <Form.Label>
                         Email Address
@@ -74,7 +105,7 @@ function Login() {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose,handleLogin}>
+          <Button variant="primary" onClick={handleLogin}>
             Submit
           </Button>
         </Modal.Footer>

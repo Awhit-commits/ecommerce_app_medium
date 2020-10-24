@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import {Link,withRouter} from 'react-router-dom';
 import Navbar from "react-bootstrap/Navbar"
 import Nav from "react-bootstrap/Nav";
 import Signup from '../Auth/Sign Up/Signup';
 import Login from '../Auth/Login/Login';
 import Button from 'react-bootstrap/esm/Button';
+
+import {signOut,isAuthenicated} from '../Auth/index'
 
 const isActive = (history,path)=>{
     if(history.location.pathname === path){
@@ -22,8 +24,12 @@ const Menu =({history})=> (
   <Navbar.Collapse id="basic-navbar-nav">
     <Nav className="mr-auto">
       <Nav.Link href="/"><Button style = {isActive(history,"/")} variant = "">Home</Button></Nav.Link>
-      <Nav.Link href="#" ><Button  style = {isActive(history,"/signup")} variant = ""><Signup /></Button></Nav.Link>
-      <Nav.Link href="#"><Button  style = {isActive(history,"/login")} variant = ""><Login /></Button></Nav.Link>
+      {!isAuthenicated() && <Fragment> <Nav.Item><Nav.Link href="#" ><Button  style = {isActive(history,"/signup")} variant = ""><Signup /></Button></Nav.Link></Nav.Item>
+     <Nav.Item> <Nav.Link href="#"><Button  style = {isActive(history,"/login")} variant = ""><Login /></Button></Nav.Link></Nav.Item></Fragment>}
+
+      {isAuthenicated() && (<div><Nav.Link href = "#"><Button style = {isActive(history,"/signout")} variant ="" onClick = {()=>signOut(()=>{history.push("/")})}>Signout</Button></Nav.Link></div>)}
+      
+      
       
     </Nav>
     </Navbar.Collapse>
