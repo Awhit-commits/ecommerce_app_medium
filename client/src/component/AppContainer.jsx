@@ -6,6 +6,7 @@ import LoginForm from './Auth/Login/LoginForm'
 import SignUpForm from './Auth/Sign Up/SignUpForm'
 import Home from './Core/Home'
 import NavBar from './NavBar/NavBar'
+import UserDashboard from './Dashboard/UserDashboard'
 
 
 export default function AppContainer() {
@@ -18,6 +19,7 @@ export default function AppContainer() {
             <Route path = "/" exact component = {Home}></Route>
             <Route path = "/signup"><SignUpForm/></Route>
             <Route path = "/login"><LoginForm/></Route>
+            <Route path  = "/dashboard"><UserDashboard/></Route>
 
         
         

@@ -7,6 +7,7 @@ import Login from '../Auth/Login/Login';
 import Button from 'react-bootstrap/esm/Button';
 
 import {signOut,isAuthenicated} from '../Auth/index'
+import UserDashboard from '../Dashboard/UserDashboard';
 
 const isActive = (history,path)=>{
     if(history.location.pathname === path){
@@ -25,9 +26,12 @@ const Menu =({history})=> (
     <Nav className="mr-auto">
       <Nav.Link href="/"><Button style = {isActive(history,"/")} variant = "">Home</Button></Nav.Link>
       {!isAuthenicated() && <Fragment> <Nav.Item><Nav.Link href="#" ><Button  style = {isActive(history,"/signup")} variant = ""><Signup /></Button></Nav.Link></Nav.Item>
-     <Nav.Item> <Nav.Link href="#"><Button  style = {isActive(history,"/login")} variant = ""><Login /></Button></Nav.Link></Nav.Item></Fragment>}
+     <Nav.Item> <Nav.Link href="#"><Button  style = {isActive(history,"/login")} variant = ""><Login /></Button></Nav.Link></Nav.Item>
+     </Fragment>}
 
-      {isAuthenicated() && (<div><Nav.Link href = "#"><Button style = {isActive(history,"/signout")} variant ="" onClick = {()=>signOut(()=>{history.push("/")})}>Signout</Button></Nav.Link></div>)}
+      {isAuthenicated() && (<Fragment><Nav.Item> <Nav.Link href="#" ><Button style = {isActive(history,"/signout")} variant ="" onClick = {()=>signOut(()=>{history.push("/")})}>Signout</Button></Nav.Link></Nav.Item>
+      <Nav.Item><Nav.Link href = "/dashboard"><Button style = {isActive(history,"/dashboard")} variant ="">Dashboard</Button></Nav.Link></Nav.Item></Fragment>
+      )}
       
       
       
